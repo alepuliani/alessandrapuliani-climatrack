@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue"
 import Chart from "chart.js/auto"
+import { useClimateStore } from "@/stores/climateStore"
 import zoomPlugin from "chartjs-plugin-zoom"
 Chart.register(zoomPlugin)
 
@@ -11,6 +12,7 @@ const props = defineProps({
   }
 })
 
+const store = useClimateStore()
 let chart = ref(null)
 let isZoomActive = ref(false)
 let resetBtn = null
@@ -46,37 +48,6 @@ const selectLabels = function () {
   return labels
 }
 
-// The `selectData` function is responsible for determining and returning the specific data to be
-// displayed on the chart based on the `props.item.name` value. It uses a switch statement to handle
-// different cases for different types of data.
-const selectData = function () {
-  let chartData
-  switch (props.item.name) {
-    case "Arctic Ice":
-      const arcticData = Object.values(props.item.data)
-        .map((item) => item.anom)
-        .filter((item) => item !== -9999)
-      return arcticData
-    case "CO2":
-      const CO2Data = props.item.data.map((entry) => parseFloat(entry.trend))
-      return CO2Data
-    case "NO2":
-      const NO2Data = props.item.data.map((entry) => parseFloat(entry.trend))
-      return NO2Data
-    case "Methane":
-      const menthaneData = props.item.data.map((entry) =>
-        parseFloat(entry.trend)
-      )
-      return menthaneData
-    case "Temperature":
-      const temperatureData = props.item.data.map((entry) =>
-        parseFloat(entry.station)
-      )
-      return temperatureData
-  }
-  return chartData
-}
-
 // The `resetChartZoom` function is responsible for resetting the zoom on the chart.
 const resetChartZoom = function () {
   chart.value.resetZoom()
@@ -86,7 +57,7 @@ const resetChartZoom = function () {
 
 // The `createChart` function is responsible for creating and updating the Chart.js chart displayed on
 // the canvas element with the id "chart".
-const createChart = function (labels, data) {
+const createChart = function (labels) {
   if (chart.value) {
     chart.value.destroy()
   }
@@ -97,7 +68,7 @@ const createChart = function (labels, data) {
       datasets: [
         {
           label: chartLabel,
-          data: data,
+          data: props.item.anomalies,
           borderColor: props.item.lineColor,
           pointRadius: 0,
           borderWidth: 2,
@@ -140,22 +111,19 @@ const createChart = function (labels, data) {
 // The `onMounted` hook in Vue is used to run the provided callback function when the component is
 // mounted to the DOM.
 onMounted(async () => {
-  console.log("Chart element: ", document.getElementById("chart"))
   const labels = selectLabels()
-  let data = selectData()
-  createChart(labels, data)
+  await store.selectItemAnomalies(props.item.name)
+  createChart(labels)
   resetBtn = document.querySelector(".reset-btn")
 })
 
 // The `watch` function in Vue is used to watch for changes in reactive data and execute a callback
 // when those changes occur.
 watch(
-  () => [props.item.data],
+  () => [props.item],
   () => {
     const labels = selectLabels()
-    const data = selectData()
-    console.log("Updating Chart with labels: ", labels, " and data: ", data)
-    createChart(labels, data)
+    createChart(labels)
   }
 )
 </script>
@@ -179,7 +147,6 @@ watch(
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(#b4b4b4, 0.8);
-    max-width: 100%;
   }
   .reset-btn {
     display: none;
@@ -208,7 +175,10 @@ watch(
   }
   @media screen and (min-width: 1024px) {
     .chart {
-      min-width: 700px;
+      margin-left: 20px;
+      max-width: 1000px;
+      min-width: 600px;
+      flex-grow: 1;
     }
   }
 }

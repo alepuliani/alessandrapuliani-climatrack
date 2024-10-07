@@ -33,9 +33,8 @@ const selectClimateItem = async function () {
 // selected climate item based on the route parameter `name`.
 const loadSelectedItem = async function () {
   window.scrollTo(0, 0)
-  await climateStore.setClimateData(route.params.name) // Controlla che questo metodo aggiorni effettivamente i dati
+  await climateStore.setClimateData(route.params.name)
   await selectClimateItem()
-  console.log("Selected item after loading: ", selectedItem.value) // Log per il monitoraggio
 }
 
 onMounted(loadSelectedItem)
@@ -121,14 +120,10 @@ watch(
   .element-div {
     border-radius: 10px;
     margin: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+
     padding-bottom: 30px;
 
     .causes {
-      width: 90vw;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -193,10 +188,29 @@ watch(
 
 @media screen and (min-width: 1024px) {
   .container {
-    .data-div {
-      width: 100%;
-      flex-direction: row;
-      justify-content: space-evenly;
+    .info-div {
+      padding: 100px 150px;
+      h1 {
+        font-size: 60px;
+        margin-bottom: 0;
+      }
+
+      p {
+        max-width: 800px;
+      }
+    }
+
+    .element-div {
+      .causes {
+        padding: 80px 100px;
+        padding-bottom: 0;
+      }
+      .data-div {
+        padding: 30px;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 50px;
+      }
     }
   }
 }

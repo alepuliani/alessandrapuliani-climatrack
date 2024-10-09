@@ -117,6 +117,7 @@ const createChart = function (labels) {
 // mounted to the DOM.
 onMounted(async () => {
   resetBtn = document.querySelector(".reset-btn")
+  resetBtn.classList.remove("display-zoom")
   const labels = selectLabels()
   store.selectItemAnomalies(props.item.name)
   updateChartLabel()
@@ -128,10 +129,10 @@ onMounted(async () => {
 watch(
   () => props.item,
   () => {
-    console.log(props.item.name)
     store.selectItemAnomalies(props.item.name)
     const labels = selectLabels()
     updateChartLabel()
+    resetBtn.classList.remove("display-zoom")
     createChart(labels)
   }
 )

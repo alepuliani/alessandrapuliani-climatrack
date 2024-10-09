@@ -202,14 +202,14 @@ watch(
 
     .element-div {
       .causes {
-        padding: 80px 100px;
+        padding: 40px 100px;
         padding-bottom: 0;
       }
       .data-div {
         padding: 30px;
+        margin-top: 0;
         flex-direction: row;
         justify-content: center;
-        margin-top: 50px;
       }
     }
   }

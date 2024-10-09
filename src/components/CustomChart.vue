@@ -16,13 +16,16 @@ const store = useClimateStore()
 let chart = ref(null)
 let isZoomActive = ref(false)
 let resetBtn = null
+const chartLabel = ref("")
 
-// The `chartLabel` constant is determining the label to be displayed on the chart based on the
-// `props.item.name` value.
-const chartLabel =
-  props.item.name === "Arctic Ice"
-    ? "Arctic Ice Anomalies"
-    : `${props.item.name} Trend`
+// The `updateChartLabel` function is updating the value of the `chartLabel` ref based on the
+// `props.item.name` value, it is used to dynamically set the label for the chart based on the type of data beingdisplayed.
+const updateChartLabel = function () {
+  chartLabel.value =
+    props.item.name === "Arctic Ice"
+      ? "Arctic Ice Anomalies"
+      : `${props.item.name} Trend`
+}
 
 // The `selectLabels` function is determining the labels to be displayed on the chart based on the
 // `props.item.name` value. It uses a switch statement to handle different cases for different types of data.
@@ -44,6 +47,8 @@ const selectLabels = function () {
         .map((item) => item.anom)
         .filter((item) => item !== -9999)
       break
+    default:
+      labels = []
   }
   return labels
 }
@@ -67,7 +72,7 @@ const createChart = function (labels) {
       labels: labels,
       datasets: [
         {
-          label: chartLabel,
+          label: chartLabel.value,
           data: props.item.anomalies,
           borderColor: props.item.lineColor,
           pointRadius: 0,
@@ -111,18 +116,22 @@ const createChart = function (labels) {
 // The `onMounted` hook in Vue is used to run the provided callback function when the component is
 // mounted to the DOM.
 onMounted(async () => {
-  const labels = selectLabels()
-  await store.selectItemAnomalies(props.item.name)
-  createChart(labels)
   resetBtn = document.querySelector(".reset-btn")
+  const labels = selectLabels()
+  store.selectItemAnomalies(props.item.name)
+  updateChartLabel()
+  createChart(labels)
 })
 
 // The `watch` function in Vue is used to watch for changes in reactive data and execute a callback
 // when those changes occur.
 watch(
-  () => [props.item],
+  () => props.item,
   () => {
+    console.log(props.item.name)
+    store.selectItemAnomalies(props.item.name)
     const labels = selectLabels()
+    updateChartLabel()
     createChart(labels)
   }
 )

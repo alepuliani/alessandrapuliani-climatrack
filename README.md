@@ -2,7 +2,7 @@
 
 ClimaTrack is a web application designed to explore and understand climate change data. It provides users with vital information regarding climate trends, statistics, and the impact of climate change on our planet.
 
-🔗 [go to ClimaTrack](https://alepuliani.github.io/alessandrapuliani-climatrack/)
+🔗 [go to ClimaTrack](https://climatrack-dashboard.netlify.app/)
 
 ## Features
 

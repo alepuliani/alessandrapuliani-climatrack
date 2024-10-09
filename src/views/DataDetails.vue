@@ -32,7 +32,6 @@ const selectClimateItem = async function () {
 // The `loadSelectedItem` function is an asynchronous function that is responsible for loading the
 // selected climate item based on the route parameter `name`.
 const loadSelectedItem = async function () {
-  window.scrollTo(0, 0)
   await climateStore.setClimateData(route.params.name)
   await selectClimateItem()
 }

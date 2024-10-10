@@ -56,7 +56,7 @@ watch(
       :style="{
         backgroundImage: `url(${selectedItem.background})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'bottom'
       }"
     >
       <h1>{{ selectedItem.name }}</h1>

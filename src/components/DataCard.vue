@@ -47,11 +47,9 @@ onMounted(function () {
 })
 
 watch(
+  () => props.item,
   () => {
-    return props.item
-  },
-  (newItem) => {
-    itemData.value = newItem.data
+    itemData.value = props.item.data
     updateData()
   }
 )

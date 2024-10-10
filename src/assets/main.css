@@ -14,14 +14,17 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 14px;
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #6f916e;
+  background-color: #818181;
   border-radius: 5px;
+  width: 6px;
+  border-left: 3px solid rgb(241, 241, 241);
+  border-right: 3px solid rgb(241, 241, 241);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #92ac84;
+  background-color: #6c6c6c;
 }
